@@ -2,54 +2,56 @@ import sbt._
 
 object Dependencies {
 
-  object Versions {
-    val cats         = "2.5.0"
-    val catsEffect   = "2.4.1"
-    val catsMeowMtl  = "0.4.1"
-    val console4cats = "0.8.1"
-    val derevo       = "0.11.6"
-    val fs2          = "2.5.4"
-    val log4cats     = "1.0.0"
-    val logback      = "1.2.1"
-    val monocle      = "2.1.0"
-    val newtype      = "0.4.4"
-    val refined      = "0.9.23"
+  object V {
+    val cats       = "2.6.1"
+    val catsEffect = "3.1.1"
+    val catsMtl    = "1.2.1"
+    val derevo     = "0.12.6"
+    val fs2        = "3.0.5"
+    val monocle    = "3.0.0-RC2"
+    val newtype    = "0.4.4"
+    val refined    = "0.9.26"
+    val tofu       = "0.10.2"
 
     val betterMonadicFor = "0.3.1"
-    val contextApplied   = "0.1.4"
-    val kindProjector    = "0.11.3"
+    val kindProjector    = "0.13.0"
+    val organizeImports  = "0.5.0"
+    val semanticDB       = "4.4.23"
   }
 
   object Libraries {
-    val cats         = "org.typelevel"  %% "cats-core"    % Versions.cats
-    val catsEffect   = "org.typelevel"  %% "cats-effect"  % Versions.catsEffect
-    val console4cats = "dev.profunktor" %% "console4cats" % Versions.console4cats
-    val fs2          = "co.fs2"         %% "fs2-core"     % Versions.fs2
+    def derevo(artifact: String): ModuleID = "tf.tofu" %% s"derevo-$artifact" % V.derevo
 
-    val catsMeowMtlCore    = "com.olegpy" %% "meow-mtl-core"    % Versions.catsMeowMtl
-    val catsMeowMtlEffects = "com.olegpy" %% "meow-mtl-effects" % Versions.catsMeowMtl
+    val cats       = "org.typelevel" %% "cats-core"   % V.cats
+    val catsEffect = "org.typelevel" %% "cats-effect" % V.catsEffect
+    val catsMtl    = "org.typelevel" %% "cats-mtl"    % V.catsMtl
+    val fs2        = "co.fs2"        %% "fs2-core"    % V.fs2
 
-    val derevoCats    = "org.manatki" %% "derevo-cats"         % Versions.derevo
-    val derevoTagless = "org.manatki" %% "derevo-cats-tagless" % Versions.derevo
+    val derevoCats          = derevo("cats")
+    val derevoCirceMagnolia = derevo("circe-magnolia")
+    val derevoTagless       = derevo("cats-tagless")
 
-    val refinedCore = "eu.timepit" %% "refined"      % Versions.refined
-    val refinedCats = "eu.timepit" %% "refined-cats" % Versions.refined
+    val tofu = "tf.tofu" %% "tofu-core-higher-kind" % V.tofu
 
-    val log4cats = "io.chrisdavenport" %% "log4cats-slf4j" % Versions.log4cats
-    val newtype  = "io.estatico"       %% "newtype"        % Versions.newtype
+    val refinedCore = "eu.timepit" %% "refined"      % V.refined
+    val refinedCats = "eu.timepit" %% "refined-cats" % V.refined
 
-    val monocleCore  = "com.github.julien-truffaut" %% "monocle-core"  % Versions.monocle
-    val monocleMacro = "com.github.julien-truffaut" %% "monocle-macro" % Versions.monocle
+    val newtype  = "io.estatico"       %% "newtype"        % V.newtype
 
-    // Runtime
-    val logback = "ch.qos.logback" % "logback-classic" % Versions.logback
+    val monocleCore  = "dev.optics" %% "monocle-core"  % V.monocle
+    val monocleMacro = "dev.optics" %% "monocle-macro" % V.monocle
+
+    // Scalafix rules
+    val organizeImports = "com.github.liancheng" %% "organize-imports" % V.organizeImports
   }
 
   object CompilerPlugins {
-    val betterMonadicFor = compilerPlugin("com.olegpy"     %% "better-monadic-for" % Versions.betterMonadicFor)
-    val contextApplied   = compilerPlugin("org.augustjune" %% "context-applied"    % Versions.contextApplied)
+    val betterMonadicFor = compilerPlugin("com.olegpy" %% "better-monadic-for" % V.betterMonadicFor)
     val kindProjector = compilerPlugin(
-      "org.typelevel" %% "kind-projector" % Versions.kindProjector cross CrossVersion.full
+      "org.typelevel" %% "kind-projector" % V.kindProjector cross CrossVersion.full
+    )
+    val semanticDB = compilerPlugin(
+      "org.scalameta" % "semanticdb-scalac" % V.semanticDB cross CrossVersion.full
     )
   }
 

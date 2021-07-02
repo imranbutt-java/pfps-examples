@@ -6,10 +6,4 @@ pfps-examples
 
 Standalone examples shown in the book [Practical FP in Scala: A hands-on approach](https://leanpub.com/pfp-scala).
 
-### CI Build
-
-Generate YAML definition for Github actions
-
-```
-$ dhall-to-yaml --file ci.dhall --output ci.yml
-```
+⚠️ **IMPORTANT NOTICE** If you are reading the first edition of [Practical FP in Scala](https://leanpub.com/pfp-scala), go to the [master](https://github.com/gvolpe/pfps-examples/tree/master) branch. You're now on the `second-edition` branch, which is the new default. ⚠️

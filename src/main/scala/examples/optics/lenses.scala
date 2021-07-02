@@ -1,6 +1,8 @@
 package examples.optics
 
 import monocle.Lens
+import monocle.macros.GenLens
+import monocle.syntax.all._
 
 object lenses extends App {
 
@@ -13,16 +15,11 @@ object lenses extends App {
 
   case class Person(name: PersonName, age: PersonAge, address: Address)
 
-  val addressLens: Lens[Person, Address] =
-    Lens[Person, Address](_.address)(a => p => p.copy(address = a))
+  val _PersonAddress     = GenLens[Person](_.address)
+  val _AddressStreetName = GenLens[Address](_.streetName)
 
-  val streetNameLens: Lens[Address, StreetName] =
-    Lens[Address, StreetName](_.streetName)(s => a => a.copy(streetName = s))
-
-  val composedLens: Lens[Person, StreetName] =
-    addressLens.composeLens(streetNameLens)
-
-  println("Lenses example")
+  val _PersonStreetName: Lens[Person, StreetName] =
+    _PersonAddress.andThen(_AddressStreetName)
 
   val person = Person(
     name = PersonName("Homer Simpson"),
@@ -33,8 +30,16 @@ object lenses extends App {
     )
   )
 
-  println(addressLens.get(person)) // current address
-  println(composedLens.get(person)) // current street name
-  println(composedLens.set(StreetName("foo"))(person)) // person with new address
+  println("Lenses example using the new Focus API")
+
+  println(person.focus(_.address).get)
+  println(person.focus(_.address.streetName).get)
+  println(person.focus(_.address.streetName).replace(StreetName("foo")))
+
+  println("Lenses example using the classic encoding")
+
+  println(_PersonAddress.get(person))                           // current address
+  println(_PersonStreetName.get(person))                        // current street name
+  println(_PersonStreetName.replace(StreetName("foo"))(person)) // person with new address
 
 }

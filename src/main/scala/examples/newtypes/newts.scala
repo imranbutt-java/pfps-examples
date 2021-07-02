@@ -2,11 +2,11 @@ package examples.newtypes
 
 import cats.effect._
 import cats.implicits._
-import io.estatico.newtype.macros._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
 import eu.timepit.refined.collection.Contains
 import eu.timepit.refined.types.string.NonEmptyString
+import io.estatico.newtype.macros._
 
 object valueclasses {
   case class User(username: Username, email: Email)
@@ -15,7 +15,7 @@ object valueclasses {
     IO.pure(User(username, email).some)
 
   case class Username private (val value: String) extends AnyVal
-  case class Email private (val value: String) extends AnyVal
+  case class Email private (val value: String)    extends AnyVal
 
   def mkUsername(value: String): Option[Username] =
     if (value.nonEmpty) Username(value).some
@@ -29,14 +29,13 @@ object valueclasses {
     (
       mkUsername("aeinstein"),
       mkEmail("aeinstein@research.com")
-    ).mapN {
-      case (username, email) => lookup(username, email)
+    ).mapN { case (username, email) =>
+      lookup(username, email)
     }
 
   val bar =
-    (mkUsername("aeinstein"), mkEmail("aeinstein@research.com")).mapN {
-      case (username, email) =>
-        lookup(username.copy(value = ""), email)
+    (mkUsername("aeinstein"), mkEmail("aeinstein@research.com")).mapN { case (username, email) =>
+      lookup(username.copy(value = ""), email)
     }
 }
 
